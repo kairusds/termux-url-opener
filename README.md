@@ -17,3 +17,7 @@ apt autoremove autoconf automake bc bison build-essential clang cmake flex gperf
 
 Termux doesn't recognize yt-dlp's binary with termux-url-opener for some
 reason so you have to install the PIP version instead.
+
+## Notice
+If you keep getting `Permission denied` errors, just regrant the Storage permission
+for the Termux app manually. Running `termux-setup-storage` again wipes your entire internal storage.
