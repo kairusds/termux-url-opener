@@ -32,7 +32,7 @@ if [[ "$url" == *"youtube.com"* || "$url" == *"youtu.be"* ]]; then
 	formatlol="-f "bestvideo[ext=mp4]+bestaudio[ext=m4a]/bestvideo+bestaudio""
 fi
 
-sdcard="$HOME/storage/shared"
+storage="$HOME/storage"
 
 echo -e "\e[33mSource code: \e[4mhttps://github.com/kairusds/termux-url-opener"
 
@@ -45,7 +45,7 @@ if [[ "$OPT" = "Download MP3" ]]; then
 		--no-mtime \
 		--extract-audio \
 		--audio-format mp3 \
-		-o "$sdcard/Music/%(creator)s - %(title)s.%(ext)s" \
+		-o "$storage/music/%(creator)s - %(title)s.%(ext)s" \
 		--audio-quality 0 \
 		"$url" \
 		--download-archive $HOME/archive.txt
@@ -62,7 +62,7 @@ elif [[ "$OPT" = "Download MP4" ]]; then
 		--no-mtime \
 		$additional_args \
 		--ignore-errors \
-		-o "$HOME/$filename.%(ext)s" \
+		-o "$storage/movies/$filename.%(ext)s" \
 		"$url" \
 		--downloader $PREFIX/bin/aria2c \
 		--downloader-args "-j 16 -s 16 -x 16 -k 1M"
