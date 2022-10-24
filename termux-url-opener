@@ -25,11 +25,11 @@
 # for more details.
 
 url="$1"
-filename="%(title)s"
-formatlol="-f "bestvideo[ext=mp4]+bestaudio[ext=m4a]/bestvideo+bestaudio""
-if [[ $url == *"twitter.com"* ]]; then
-	filename="%(id)s"
-	video_format=""
+filename="%(id)s"
+formatlol=""
+if [[ "$url" == *"youtube.com"* || "$url" == *"youtu.be"* ]]; then
+	filename="%(title)s"
+	formatlol="-f "bestvideo[ext=mp4]+bestaudio[ext=m4a]/bestvideo+bestaudio""
 fi
 
 sdcard="$HOME/storage/shared"
