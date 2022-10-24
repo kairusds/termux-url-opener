@@ -1,0 +1,71 @@
+#!/bin/bash
+
+# Copyright (c) 2022 harveyhans
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+
+# Works with all sites supported by yt-dlp, 
+# see https://github.com/yt-dlp/yt-dlp/blob/master/supportedsites.md
+# for more details.
+
+url="$1"
+filename="%(title)s"
+formatlol="-f "bestvideo[ext=mp4]+bestaudio[ext=m4a]/bestvideo+bestaudio""
+if [[ $url == *"twitter.com"* ]]; then
+	filename="%(id)s"
+	video_format=""
+fi
+
+sdcard="$HOME/storage/shared"
+
+echo -e "\e[33mSource code: \e[4mhttps://github.com/kairusds/termux-url-opener"
+
+OPT=$(termux-dialog radio -v "Download MP3,Download MP4" -t "What do you want to do with $url?" | jq ".text" -r)
+
+if [[ "$OPT" = "Download MP3" ]]; then
+	yt-dlp \
+		-f bestaudio \
+		--ignore-errors \
+		--no-mtime \
+		--extract-audio \
+		--audio-format mp3 \
+		-o "$sdcard/Music/%(creator)s - %(title)s.%(ext)s" \
+		--audio-quality 0 \
+		"$url" \
+		--download-archive $HOME/archive.txt
+elif [[ "$OPT" = "Download MP4" ]]; then
+	TRIM=$(termux-dialog confirm -i "Do you want to trim the video?" | jq ".text" -r)
+	if [ $TRIM = "yes" ]; then
+		START=$(termux-dialog -i "hh:mm:ss" -t "Enter the start timestamp" | jq ".text" -r)
+		END=$(termux-dialog -i "inf = end of the video" -t "Enter the end timestamp" | jq ".text" -r)
+		additional_args="--download-sections "*$START-$END" --force-keyframes-at-cuts"
+	fi
+	yt-dlp \
+		$formatlol \
+		--merge-output-format mp4 \
+		--no-mtime \
+		$additional_args \
+		--ignore-errors \
+		-o "$HOME/$filename.%(ext)s" \
+		"$url" \
+		--downloader $PREFIX/bin/aria2c \
+		--downloader-args "-j 16 -s 16 -x 16 -k 1M"
+else
+	exit
+fi
