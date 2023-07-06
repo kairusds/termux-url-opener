@@ -6,18 +6,14 @@ Install the [Termux:API app](https://f-droid.org/en/packages/com.termux.api/)
 
 ```sh
 pkg update
-pkg install python3 ffmpeg jq build-essential termux-api
+pkg install python3 ffmpeg jq termux-api
 pip install --upgrade yt-dlp
-export PATH=$(which ffmpeg):$PATH
-
-# Run this command to remove build-esssential dependencies and ndk-sysroot to free up storage
-# You can also keep it so you don't have to reinstall it everytime yt-dlp gets an update
-apt autoremove autoconf automake bc bison build-essential clang cmake flex gperf jsoncpp libarchive libcompiler-rt libllvm libltdl libtool libuv lld llvm m4 ndk-sysroot perl rhash
 ```
 
 Termux doesn't recognize yt-dlp's binary with termux-url-opener for some
-reason so you have to install the PIP version instead.
+reason so you have to install the Python PIP version instead.
 
 ## Notice
-If you keep getting `Permission denied` errors, just regrant the Storage permission
-for the Termux app manually. Running `termux-setup-storage` again wipes your entire internal storage.
+- ffmpeg v6.0+ seems to be breaking the `trim video` feature at the moment. Specifically only on Termux and not any other Linux distro.
+- If you keep getting `Permission denied` errors, just regrant the Storage permission
+for the Termux app manually on its app info page. Running `termux-setup-storage` again wipes your entire internal storage.
