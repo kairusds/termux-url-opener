@@ -26,10 +26,8 @@
 
 url="$1"
 filename="%(id)s"
-formatlol=""
 if [[ "$url" == *"youtube.com"* || "$url" == *"youtu.be"* ]]; then
 	filename="%(title)s"
-	formatlol="-f "bestvideo[ext=mp4]+bestaudio[ext=m4a]/bestvideo+bestaudio""
 fi
 
 storage="$HOME/storage"
@@ -57,8 +55,7 @@ elif [[ "$OPT" = "Download MP4" ]]; then
 		additional_args="--download-sections "*$START-$END" --force-keyframes-at-cuts"
 	fi
 	yt-dlp \
-		$formatlol \
-		--merge-output-format mp4 \
+		-f "bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best" \
 		--no-mtime \
 		$additional_args \
 		--ignore-errors \
