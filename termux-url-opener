@@ -27,14 +27,14 @@
 url="$1"
 filename="%(id)s"
 if [[ "$url" == *"youtube.com"* || "$url" == *"youtu.be"* ]]; then
-	filename="%(title)s"
+	filename="%(title)s_%(epoch)s"
 fi
 
 storage="$HOME/storage"
 
 echo -e "\e[33mSource code: \e[4mhttps://github.com/kairusds/termux-url-opener"
 
-OPT=$(termux-dialog radio -v "Download MP3,Download MP4" -t "What do you want to do with $url?" | jq ".text" -r)
+OPT=$(termux-dialog radio -v "Download MP3,Download Video" -t "What do you want to do with $url?" | jq ".text" -r)
 
 if [[ "$OPT" = "Download MP3" ]]; then
 	yt-dlp \
@@ -43,26 +43,33 @@ if [[ "$OPT" = "Download MP3" ]]; then
 		--no-mtime \
 		--extract-audio \
 		--audio-format mp3 \
-		-o "$storage/music/%(creator)s - %(title)s.%(ext)s" \
+		-o "$storage/music/%(uploader)s - %(title)s.%(ext)s" \
 		--audio-quality 0 \
 		"$url" \
-		--download-archive $HOME/archive.txt
-elif [[ "$OPT" = "Download MP4" ]]; then
+		--download-archive $HOME/archive.txt \
+		--exec "termux-media-scan"
+elif [[ "$OPT" = "Download Video" ]]; then
 	TRIM=$(termux-dialog confirm -i "Do you want to trim the video?" | jq ".text" -r)
 	if [ $TRIM = "yes" ]; then
 		START=$(termux-dialog -i "hh:mm:ss" -t "Enter the start timestamp" | jq ".text" -r)
 		END=$(termux-dialog -i "inf = end of the video" -t "Enter the end timestamp" | jq ".text" -r)
-		additional_args="--download-sections "*$START-$END" --force-keyframes-at-cuts"
+		trim_args="--download-sections "*$START-$END" --force-keyframes-at-cuts"
 	fi
 	yt-dlp \
-		-f "bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best" \
 		--no-mtime \
-		$additional_args \
+		-f "bestvideo+bestaudio/best" \
+		$trim_args \
+		$cookies_arg \
 		--ignore-errors \
-		-o "$storage/movies/$filename.%(ext)s" \
+		-o "$storage/movies/Termux/$filename.%(ext)s" \
+		--restrict-filenames \
 		"$url" \
+		-S "res,vcodec:h264,acodec:m4a,ext" \
+		--merge-output-format "mp4/mkv" \
 		--downloader $PREFIX/bin/aria2c \
-		--downloader-args "-j 16 -s 16 -x 16 -k 1M"
+		--downloader-args "-j 16 -s 16 -x 16 -k 1M" \
+		--exec "termux-media-scan" \
+		--extractor-args "youtube:player-client=web_creator,web,android_creator,android"
 else
 	exit
 fi
