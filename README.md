@@ -9,7 +9,8 @@ Run these commands:
 ```sh
 termux-setup-storage
 pkg update
-pkg install python3 aria2 ffmpeg jq termux-api
+pkg upgrade
+pkg install python3 aria2 ffmpeg jq termux-api wget
 pip install --upgrade yt-dlp
 mkdir ~/bin
 wget https://github.com/kairusds/termux-url-opener/raw/master/termux-url-opener -P ~/bin
