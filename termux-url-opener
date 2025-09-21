@@ -69,7 +69,7 @@ elif [[ "$OPT" = "Download Video" ]]; then
 		--downloader $PREFIX/bin/aria2c \
 		--downloader-args "-j 16 -s 16 -x 16 -k 1M" \
 		--exec "termux-media-scan" \
-		--extractor-args "youtube:player-client=web_creator,web,android_creator,android"
+		--extractor-args "youtube:player_client=ios,tv,android_vr,web"
 else
 	exit
 fi
