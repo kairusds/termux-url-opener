@@ -38,7 +38,7 @@ OPT=$(termux-dialog radio -v "Download MP3,Download Video" -t "What do you want 
 
 if [[ "$OPT" = "Download MP3" ]]; then
 	yt-dlp \
-		-f bestaudio \
+		$cookies_arg \
 		--ignore-errors \
 		--no-mtime \
 		--extract-audio \
