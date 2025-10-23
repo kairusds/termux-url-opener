@@ -48,7 +48,9 @@ if [[ "$OPT" = "Download MP3" ]]; then
 		"$url" \
 		--download-archive $HOME/archive.txt \
 		--embed-thumbnail \
+		--convert-thumbnails webp \
 		--add-metadata \
+		--postprocessor-args 'EmbedThumbnail+ffmpeg_o:-c:v mjpeg -vf "crop=min(iw\,ih):min(iw\,ih)"' \
 		--extractor-args "youtube:player_js_version=actual" \
 		--exec "termux-media-scan"
 elif [[ "$OPT" = "Download Video" ]]; then
