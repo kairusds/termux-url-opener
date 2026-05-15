@@ -15,12 +15,12 @@ pkg install python3 aria2 ffmpeg jq termux-api wget nano deno
 mkdir -p yt-dlp
 wget https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp -O yt-dlp/
 chmod +x yt-dlp/yt-dlp
-termux-fix-shebang yt-dlp/yt-dlp
+termux-fix-shebang yt-dlp/yt-dlp # optional workaround for 'bad interpreter' errors while using termux-url-opener
 echo 'export PATH="$PATH:$HOME/yt-dlp"' >> .bashrc # or use global $PREFIX/etc/bash.bashrc
 source .bashrc
 mkdir ~/bin
 wget https://github.com/kairusds/termux-url-opener/raw/master/termux-url-opener -P ~/bin
-termux-fix-shebang ~/bin/termux-url-opener
+termux-fix-shebang ~/bin/termux-url-opener # optional workaround for 'bad interpreter' errors while using termux-url-opener
 chmod +x ~/bin/termux-url-opener
 ```
 
